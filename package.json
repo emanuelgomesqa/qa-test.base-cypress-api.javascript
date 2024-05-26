@@ -28,7 +28,8 @@
       "Cypress",
       "afterEach",
       "before",
-      "after"
+      "after",
+      "expect"
     ]
   }
 }
