@@ -1,0 +1,34 @@
+{
+  "name": "qa-test.base-cypress-api.javascript",
+  "version": "1.0.0",
+  "description": "Projeto Exemplo de estrutura de automação de API feita com Cypress",
+  "main": "index.js",
+  "scripts": {
+    "open:serverest": "cypress open --env configFile=serverest --config specPattern='cypress/e2e/api_serverest/**/*.cy.{js,jsx,ts,tsx}'",
+    "run:serverest": "cypress run --env configFile=serverest --spec 'cypress/e2e/api_serverest/**/*.cy.{js,jsx,ts,tsx}'",
+    "lint": "standard",
+    "lint:fix": "standard --fix"
+  },
+  "keywords": [],
+  "author": "Emanuel Gomes Ferreira da Silva",
+  "license": "ISC",
+  "dependencies": {
+    "cypress": "^13.10.0"
+  },
+  "devDependencies": {
+    "standard": "^17.1.0"
+  },
+  "standard": {
+    "globals": [
+      "beforeEach",
+      "describe",
+      "it",
+      "cy",
+      "context",
+      "Cypress",
+      "afterEach",
+      "before",
+      "after"
+    ]
+  }
+}
