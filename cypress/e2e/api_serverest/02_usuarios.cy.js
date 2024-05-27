@@ -270,9 +270,226 @@ describe('USUÁRIOS API Tests - SERVEREST', () => {
             })
         })
     })
-    context.skip('Método POST - Cadastrar Usuário', () => {
-        it('', () => {
+    context('Método POST - Cadastrar Usuário', () => {
+        it('Cadastrar usuário com sucesso', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                administrador: 'true'
+            }
+            cy.request('POST', '/usuarios', newUser).then(res => {
+                expect(res.status).to.eq(201)
+                expect(res.body).to.property('message', response.cadastroRealizado)
+                expect(res.body).to.property('_id')
+            })
+        })
+        it('Cadastrar usuário sem nome', () => {
+            const newUser = {
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                administrador: 'true'
+            }
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('nome', response.nomeRequired)
+            })
+        })
+        it('Cadastrar usuário sem email', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                password: faker.internet.password(),
+                administrador: 'true'
+            }
 
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('email', response.emailRequired)
+            })
+        })
+        it('Cadastrar usuário sem senha', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: faker.internet.email(),
+                administrador: 'true'
+            }
+
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('password', response.passwordRequired)
+            })
+        })
+        it('Cadastrar usuário com email já cadastrado', () => {
+            cy.request('GET', '/usuarios').then(value => {
+                const existingUser = {
+                    nome: faker.name.findName(),
+                    email: value.body.usuarios[0].email,
+                    password: faker.internet.password(),
+                    administrador: 'true'
+                }
+                cy.request({
+                    method: 'POST',
+                    url: '/usuarios',
+                    body: existingUser,
+                    failOnStatusCode: false
+                }).then(res => {
+                    expect(res.status).to.eq(400)
+                    expect(res.body).to.have.property('message', response.emailExistente)
+                })
+            })
+        })
+        it('Cadastrar usuário com email inválido', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: 'invalid-email',
+                password: faker.internet.password(),
+                administrador: 'true'
+            }
+
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('email', response.emailFormatoInvalido)
+            })
+        })
+        it('Cadastrar usuário sem indicar se é administrador', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: faker.internet.email(),
+                password: faker.internet.password()
+            }
+
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('administrador', response.administradorRequired)
+            })
+        })
+        it('Cadastrar usuário com administrador inválido', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                administrador: 'invalid'
+            }
+
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('administrador', response.administradorInvalido)
+            })
+        })
+        it('Cadastrar usuário com nome em branco', () => {
+            const newUser = {
+                nome: '',
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                administrador: 'true'
+            }
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('nome', response.nomeEmBranco)
+            })
+        })
+        it('Cadastrar usuário com email em branco', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: '',
+                password: faker.internet.password(),
+                administrador: 'true'
+            }
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('email', response.emailEmBranco)
+            })
+        })
+        it('Cadastrar usuário com senha em branco', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: faker.internet.email(),
+                password: '',
+                administrador: 'true'
+            }
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('password', response.passwordEmBranco)
+            })
+        })
+        it('Cadastrar usuário com administrador em branco', () => {
+            const newUser = {
+                nome: faker.name.findName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+                administrador: ''
+            }
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: newUser,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('administrador', response.administradorEmBranco)
+            })
+        })
+        it('Cadastrar usuário com dados extras', () => {
+            cy.request({
+                method: 'POST',
+                url: '/usuarios',
+                body: {
+                    nome: faker.name.findName(),
+                    email: faker.internet.email(),
+                    password: faker.internet.password(),
+                    administrador: 'true',
+                    emanuel: 'teste'
+                },
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.have.property('emanuel', 'emanuel não é permitido')
+            })
         })
     })
     context('Método GET - Buscar Usuário por ID', () => {
