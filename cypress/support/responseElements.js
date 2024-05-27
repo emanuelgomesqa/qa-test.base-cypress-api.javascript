@@ -5,4 +5,5 @@ export const response = {
   passwordRequired: 'password é obrigatório',
   emailFormatoInvalido: 'email deve ser um email válido',
   administradorInvalido: "administrador deve ser 'true' ou 'false'",
+  usuarioNaoEncontrado: 'Usuário não encontrado',
 }

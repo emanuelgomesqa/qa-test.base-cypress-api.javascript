@@ -270,22 +270,93 @@ describe('USUÁRIOS API Tests - SERVEREST', () => {
             })
         })
     })
-    context('Método POST - Cadastrar Usuário', () => {
+    context.skip('Método POST - Cadastrar Usuário', () => {
         it('', () => {
 
         })
     })
     context('Método GET - Buscar Usuário por ID', () => {
+        it('Listar usuário por ID válido', () => {
+            cy.request({
+                method: 'GET',
+                url: '/usuarios'
+            }).then(res => {
+                const userId = res.body.usuarios[0]._id;
+                cy.request({
+                    method: 'GET',
+                    url: `/usuarios/${userId}`
+                }).then(userRes => {
+                    expect(userRes.status).to.eq(200)
+                    expect(userRes.body).to.property('nome').to.eq(res.body.usuarios[0].nome)
+                    expect(userRes.body).to.property('email').to.eq(res.body.usuarios[0].email)
+                    expect(userRes.body).to.property('password').to.eq(res.body.usuarios[0].password)
+                    expect(userRes.body).to.property('administrador').to.eq(res.body.usuarios[0].administrador)
+                    expect(userRes.body).to.property('_id').to.eq(userId)
+                })
+            })
+        });
+        it('Listar usuário por ID inexistente', () => {
+            cy.request({
+                method: 'GET',
+                url: `/usuarios/605c72efc9d8b91450e6f7c9`,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.property('message').to.eq(response.usuarioNaoEncontrado)
+            })
+        });
+        it('Listar usuário por ID com formato inválido', () => {
+            cy.request({
+                method: 'GET',
+                url: `/usuarios/invalid-id`,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.property('message').to.eq(response.usuarioNaoEncontrado)
+            })
+        });
+        it('Listar usuário sem fornecer ID', () => {
+            cy.request({
+                method: 'GET',
+                url: '/usuarios/'
+            }).then(res => {
+                expect(res.status).to.eq(200)
+                expect(res.body).to.property('quantidade')
+                expect(res.body).to.property('usuarios')
+                expect(res.body.usuarios[0]).to.property('nome')
+                expect(res.body.usuarios[0]).to.property('email')
+                expect(res.body.usuarios[0]).to.property('password')
+                expect(res.body.usuarios[0]).to.property('administrador')
+                expect(res.body.usuarios[0]).to.property('_id')
+            })
+        });
+        it('Listar usuário com ID de outro tipo de dado (número)', () => {
+            cy.request({
+                method: 'GET',
+                url: `/usuarios/12345`,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.property('message').to.eq(response.usuarioNaoEncontrado)
+            })
+        });
+        it('Listar usuário com ID contendo caracteres especiais', () => {
+            cy.request({
+                method: 'GET',
+                url: `/usuarios/!@#$%`,
+                failOnStatusCode: false
+            }).then(res => {
+                expect(res.status).to.eq(400)
+                expect(res.body).to.property('message').to.eq(response.usuarioNaoEncontrado)
+            })
+        });
+    })
+    context.skip('Método PUT - Editar Usuário', () => {
         it('', () => {
 
         })
     })
-    context('Método PUT - Editar Usuário', () => {
-        it('', () => {
-
-        })
-    })
-    context('Método DELETE - Deletar Usuário', () => {
+    context.skip('Método DELETE - Deletar Usuário', () => {
         it('', () => {
 
         })
