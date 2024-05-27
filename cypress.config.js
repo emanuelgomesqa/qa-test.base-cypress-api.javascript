@@ -14,15 +14,28 @@ module.exports = defineConfig({
   e2e: {
     viewportWidth: 1920,
     viewportHeight: 934,
-    hideCredentials: true,
-    requestMode: true,
+    env: {
+      hideCredentials: true,
+      requestMode: true
+    },
     fixturesFolder: 'cypress/fixtures',
     experimentalRunAllSpecs: true,
     video: false,
+    snapshotOnly: true,
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
     setupNodeEvents (on, config) {
       const file = config.env.configFile
       return getConfigurationByFile(file)
+    },
+    reporter: 'cypress-multi-reporters',
+    reporterOptions: {
+      reporterEnabled: 'mochawesome',
+      mochawesomeReporterOptions: {
+        reportDir: 'cypress/reports',
+        overwrite: false,
+        html: false,
+        json: true
+      }
     }
   }
 })
