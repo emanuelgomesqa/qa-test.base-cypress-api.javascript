@@ -3,5 +3,6 @@ export const response = {
   loginInvalid: 'Email e/ou senha inválidos',
   emailRequired: 'email é obrigatório',
   passwordRequired: 'password é obrigatório',
-  emailFormatoInvalido: 'email deve ser um email válido'
+  emailFormatoInvalido: 'email deve ser um email válido',
+  administradorInvalido: "administrador deve ser 'true' ou 'false'",
 }

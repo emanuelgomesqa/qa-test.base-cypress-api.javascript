@@ -16,6 +16,7 @@
     "cypress": "^13.10.0"
   },
   "devDependencies": {
+    "faker-br": "^0.4.1",
     "standard": "^17.1.0"
   },
   "standard": {
@@ -29,7 +30,8 @@
       "afterEach",
       "before",
       "after",
-      "expect"
+      "expect",
+      "response"
     ]
   }
 }
